@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto Enterprise — MyAI Company</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. VARIABLES CORPORATIVAS (MYAI DESIGN SYSTEM SYSTEM CORE)
+           ========================================================================== */
+        :root {
+            --bg-pure: #020205;
+            --bg-surface: rgba(10, 11, 22, 0.45);
+            --bg-card: rgba(14, 16, 35, 0.65);
+            --brand-primary: #00f2fe;
+            --brand-secondary: #7c3aed;
+            --brand-accent: #ff007f;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(0, 242, 254, 0.12);
+            --border-hover: rgba(0, 242, 254, 0.35);
+            --font-space: 'Space Grotesk', sans-serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ==========================================================================
+           2. RESET GLOBAL & REGLAS BASE
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-pure);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* ==========================================================================
+           3. LUCES DINÁMICAS DE FONDO (NEBULA FX ESPACIAL)
+           ========================================================================== */
+        .bg-glow-1 {
+            position: fixed;
+            top: -20%; left: -10%;
+            width: 60vw; height: 60vh;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, transparent 70%);
+            z-index: -2;
+            animation: floatGlow 18s ease-in-out infinite alternate;
+        }
+
+        .bg-glow-2 {
+            position: fixed;
+            bottom: -10%; right: -5%;
+            width: 50vw; height: 50vh;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+            z-index: -2;
+            animation: floatGlow 24s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(5%, 4%) scale(1.1); }
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.005) 1px, transparent 1px), 
+                              linear-gradient(90deg, rgba(255, 255, 255, 0.005) 1px, transparent 1px);
+            background-size: 80px 80px;
+            z-index: -1;
+        }
+
+        /* ==========================================================================
+           4. COMPONENTE DE NAVEGACIÓN (HEADER SINK)
+           ========================================================================== */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 8%;
+            background: rgba(2, 2, 5, 0.7);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            width: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-dot {
+            width: 10px; height: 10px;
+            background: var(--brand-primary);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--brand-primary);
+        }
+
+        .logo-text {
+            font-family: var(--font-space);
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 35px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition-smooth);
+        }
+
+        .nav-links a:hover { 
+            color: var(--text-main); 
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        /* ==========================================================================
+           5. ANIMACIÓN REVEAL AUTOMÁTICA EN CONTENEDOR
+           ========================================================================== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: quantumReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes quantumReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==========================================================================
+           6. MAQUETACIÓN ESTRUCTURAL CENTRAL (FORM CONTAINER)
+           ========================================================================== */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .contenedor-form {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glow);
+            border-radius: 24px;
+            padding: 55px;
+            width: 100%;
+            max-width: 580px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                        0 0 40px rgba(0, 242, 254, 0.02);
+            transition: var(--transition-smooth);
+        }
+
+        .contenedor-form:hover {
+            border-color: rgba(0, 242, 254, 0.25);
+            box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.6),
+                        0 0 50px rgba(124, 58, 237, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Header Interno del Formulario */
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(0, 242, 254, 0.06);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--brand-primary);
+            margin-bottom: 20px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: var(--font-space);
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            background: linear-gradient(to bottom, #ffffff 40%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Componentes de Entrada de Datos */
+        .grupo {
+            position: relative;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: var(--transition-smooth);
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper input, 
+        .input-wrapper textarea {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 16px 18px;
+            padding-left: 48px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: var(--font-sans);
+            outline: none;
+            transition: var(--transition-smooth);
+            resize: none;
+        }
+
+        .input-wrapper textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        /* Iconos de los Input */
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            pointer-events: none;
+            transition: var(--transition-smooth);
+        }
+
+        .input-wrapper textarea ~ .input-icon {
+            top: 24px;
+            transform: none;
+        }
+
+        /* Efectos Focus */
+        .input-wrapper input:focus, 
+        .input-wrapper textarea:focus {
+            border-color: var(--brand-primary);
+            background: rgba(0, 242, 254, 0.01);
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.05),
+                        inset 0 0 10px rgba(0, 242, 254, 0.02);
+        }
+
+        .input-wrapper input:focus ~ .input-icon, 
+        .input-wrapper textarea:focus ~ .input-icon {
+            color: var(--brand-primary);
+            text-shadow: 0 0 10px var(--brand-primary);
+        }
+
+        .grupo:focus-within label {
+            color: var(--brand-primary);
+        }
+
+        /* Botón de Envío */
+        button {
+            font-family: var(--font-sans);
+            background: #ffffff;
+            color: #020205;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(255, 255, 255, 0.25);
+            background: #fff;
+        }
+
+        button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Efecto de Carga Interno */
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--brand-secondary);
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==========================================================================
+           7. ALERTAS Y CUADROS DE ESTADO DE RESPUESTA INTERACTIVA
+           ========================================================================== */
+        .resultado {
+            margin-top: 24px;
+            padding: 18px;
+            border-radius: 12px;
+            display: none;
+            font-size: 0.95rem;
+            text-align: center;
+            line-height: 1.5;
+            font-weight: 500;
+            font-family: var(--font-sans);
+            animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            border: 1px solid transparent;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exito {
+            background: rgba(16, 185, 129, 0.06);
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.05);
+        }
+
+        .error {
+            background: rgba(239, 68, 68, 0.06);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.2);
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.05);
+        }
+
+        /* ==========================================================================
+           8. DECORADOR DE FOOTER CORPORATIVO
+           ========================================================================== */
+        footer {
+            padding: 30px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(2, 2, 5, 0.4);
+            backdrop-filter: blur(10px);
+            width: 100%;
+        }
+
+        footer span {
+            color: var(--brand-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
+    <nav>
+        <div class="logo-container">
+            <div class="logo-dot"></div>
+            <div class="logo-text">MyAI Core</div>
+        </div>
+        <div class="nav-links">
+            <a href="MyAI.html#vision">Ventaja Estratégica</a>
+            <a href="MyAI.html#modulos">Modelos Core</a>
+            <a href="MyAI.html#Niveles">Niveles de infraestructura</a>
+            <a href="MyAI.html#addons">Add-ons Premium</a>
+            <a href="MyAI.html#pricing">Planes de Despliegue</a>
+            <a href="correo.html">Contacto</a>
+            <a href="index.html">MyAI-chat</a>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <div class="contenedor-form reveal">
+            
+            <div class="form-header">
+                <div class="badge">Módulo de Enlace Seguro</div>
+                <h2>Contactar Infraestructura</h2>
+                <p class="form-subtitle">Envíe sus requerimientos técnicos. Nuestro motor automatizado procesará la solicitud bajo el protocolo MyAI-Company.</p>
+            </div>
+
+            <form id="formularioCorreo" novalidate>
+                
+                <div class="grupo">
+                    <label for="para">Canal de Retorno (Tu Correo)</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">✉</span>
+                        <input type="email" id="para" placeholder="nombre@empresa.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="grupo">
+                    <label for="mensaje">Especificaciones del Proyecto / Consulta</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon"></span>
+                        <textarea id="mensaje" placeholder="Describa su negocio o su duda sobre nuestro servicio" required></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" id="btnEnviar">
+                    <div class="spinner" id="btnSpinner"></div>
+                    <span id="btnTexto">Transmitir Mensaje Seguro</span>
+                </button>
+            </form>
+
+            <div id="resultado" class="resultado"></div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2026 <span>MyAI Company</span>. Todos los derechos reservados. Protocolos de Cifrado Cuántico Activos.
+    </footer>
+
+    <script>
+        document.getElementById('formularioCorreo').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const botonEnvio = document.getElementById('btnEnviar');
+            const textoBoton = document.getElementById('btnTexto');
+            const spinnerBoton = document.getElementById('btnSpinner');
+            const contenedorResultado = document.getElementById('resultado');
+            
+            const inputCorreo = document.getElementById('para');
+            const inputMensaje = document.getElementById('mensaje');
+
+            const valorCorreo = inputCorreo.value.trim();
+            const valorMensaje = inputMensaje.value.trim();
+
+            contenedorResultado.style.display = 'none';
+            contenedorResultado.className = 'resultado';
+
+            if (!valorCorreo || !valorMensaje) {
+                mostrarAlerta('Por favor, complete todos los campos de infraestructura requeridos.', 'error');
+                return;
+            }
+
+            const patronEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!patronEmail.test(valorCorreo)) {
+                mostrarAlerta('La dirección de correo introducida no cumple con los parámetros estructurales correctos.', 'error');
+                inputCorreo.focus();
+                return;
+            }
+
+            botonEnvio.disabled = true;
+            spinnerBoton.style.display = 'block';
+            textoBoton.innerText = 'Transmitiendo Parámetros...';
+
+            const payloadDatos = {
+                para: valorCorreo,
+                asunto: "MyAI-Company", 
+                mensaje: valorMensaje
+            };
+
+            try {
+                const respuestaServidor = await fetch('http://localhost:3000/enviar-correo', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payloadDatos)
+                });
+
+                if (respuestaServidor.ok) {
+                    mostrarAlerta('🔒 Gracias por comunicarse con nosotros le responderemos en breve!', 'exito');
+                    document.getElementById('formularioCorreo').reset();
+                } else {
+                    const textoErrorBackend = await respuestaServidor.text();
+                    mostrarAlerta(`[FALLO EN INFRAESTRUCTURA]: Servidor respondió: ${textoErrorBackend}`, 'error');
+                }
+            } catch (errorRed) {
+                console.error('Critical Network Core Error:', errorRed);
+                mostrarAlerta('⚠️ No se pudo establecer enlace seguro con el backend de Node.js. Asegúrese de que el servidor local esté encendido en el puerto 3000.', 'error');
+            } finally {
+                botonEnvio.disabled = false;
+                spinnerBoton.style.display = 'none';
+                textoBoton.innerText = 'Transmitir Mensaje Seguro';
+            }
+        });
+
+        function mostrarAlerta(mensajeTexto, tipoAlerta) {
+            const divAlerta = document.getElementById('resultado');
+            divAlerta.innerText = mensajeTexto;
+            divAlerta.className = `resultado ${tipoAlerta}`;
+            divAlerta.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

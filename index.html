@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="MyAI - Plataforma de Inteligencia Artificial Avanzada">
+    <meta name="author" content="MyAI Company">
+    <title>MyAI Workspace</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="ai-aura-background" class="aura-bg state-idle">
+        <div class="aura-layer layer-1"></div>
+        <div class="aura-layer layer-2"></div>
+        <div class="aura-layer layer-3"></div>
+        <div class="particles-container" id="aura-particles"></div>
+    </div>
+
+    <div id="voice-mode-overlay" class="voice-overlay hidden" aria-hidden="true">
+        <div class="voice-header">
+            <button id="exit-voice-btn" class="icon-btn tooltip-target" data-tooltip="Salir del modo voz">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="voice-status">Escuchando continuamente...</div>
+            <button id="voice-settings-btn" class="icon-btn tooltip-target" data-tooltip="Ajustes de voz">
+                <i class="fas fa-sliders-h"></i>
+            </button>
+        </div>
+        
+        <div class="voice-visualizer-container">
+            <div id="ai-sphere-container" class="ai-sphere-container">
+                <div class="sphere-core"></div>
+                <div class="sphere-ring ring-1"></div>
+                <div class="sphere-ring ring-2"></div>
+                <div class="sphere-ring ring-3"></div>
+            </div>
+        </div>
+
+        <div class="voice-transcription-area">
+            <p id="live-transcription" class="transcription-text">Di algo...</p>
+        </div>
+
+        <div class="voice-controls">
+            <button id="toggle-mic-btn" class="voice-ctrl-btn active tooltip-target" data-tooltip="Silenciar micrófono">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <button id="end-call-btn" class="voice-ctrl-btn danger tooltip-target" data-tooltip="Terminar conversación">
+                <i class="fas fa-phone-slash"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="app-layout">
+
+        <button id="mobile-menu-toggle" class="glass-btn mobile-only" aria-label="Abrir menú">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <aside id="main-sidebar" class="sidebar modern-glass">
+            
+            <div class="sidebar-brand">
+                <div class="logo-wrapper">
+                    <svg viewBox="0 0 100 100" class="brand-logo">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6" />
+                                <stop offset="100%" stop-color="#10b981" />
+                            </linearGradient>
+                        </defs>
+                        <path d="M50 10 L90 30 L90 70 L50 90 L10 70 L10 30 Z" fill="none" stroke="url(#logoGrad)" stroke-width="8" stroke-linejoin="round"/>
+                        <circle cx="50" cy="50" r="15" fill="url(#logoGrad)"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>MyAI</h1>
+                    <span>by MyAI Company</span>
+                </div>
+                <a href="login.html" class="icon-btn settings-link tooltip-target" data-tooltip="Configuración y Cuenta">
+                    <i class="fas fa-cog"></i>
+                </a>
+            </div>
+
+            <button id="btn-new-chat" class="btn-primary pulse-hover">
+                <i class="fas fa-sparkles"></i>
+                <span>Nueva Conversación</span>
+                <kbd class="shortcut">Ctrl+K</kbd>
+            </button>
+
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-history" placeholder="Buscar chats, palabras clave...">
+                <button id="clear-search" class="clear-btn hidden"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="history-filters">
+                <button class="filter-btn active" data-filter="all">Todos</button>
+                <button class="filter-btn" data-filter="today">Hoy</button>
+                <button class="filter-btn" data-filter="starred"><i class="fas fa-star"></i></button>
+            </div>
+
+            <div class="sidebar-scroll-area">
+                <div id="chat-history-container" class="history-list">
+                    <div class="history-empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <p>Tu historial está vacío</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="storage-indicator">
+                    <div class="storage-info">
+                        <span>Almacenamiento Local</span>
+                        <span id="storage-percent">12%</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 12%;"></div></div>
+                </div>
+
+                <button id="btn-activate-voice" class="btn-voice-mode tooltip-target" data-tooltip="Activar interacción por voz inmersiva">
+                    <div class="voice-btn-inner">
+                        <div class="mic-wave">
+                            <span></span><span></span><span></span>
+                        </div>
+                        Modo Voz Continuo
+                    </div>
+                </button>
+            </div>
+        </aside>
+
+        <main id="main-content" class="chat-workspace">
+            
+            <header class="chat-header modern-glass">
+                <div class="header-left">
+                    <div class="chat-title-wrapper">
+                        <i class="fas fa-message title-icon"></i>
+                        <h2 id="current-chat-title" class="editable-title">Nueva Conversación</h2>
+                        <button class="icon-btn edit-title-btn"><i class="fas fa-pen"></i></button>
+                    </div>
+                </div>
+
+                <div class="header-controls">
+                    <div class="custom-select-wrapper">
+                        <div class="complexity-indicator">
+                            <i class="fas fa-tachometer-alt"></i> Nivel de Respuesta:
+                        </div>
+                        <select id="ai-complexity-level" class="complexity-select">
+                            <option value="spin" selected>⚡ Spin (Respuesta Ultra Rápida)</option>
+                            <option value="basico">🌱 Básico (Normal y Conciso)</option>
+                            <option value="avanzado">🧠 Avanzado (Estructurado y Detallado)</option>
+                            <option value="pro">🔬 Pro (Análisis Profundo y Experto)</option>
+                        </select>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="aura-customizer tooltip-target" data-tooltip="Personalizar color del Aura">
+                        <label for="custom-aura-color" class="color-picker-label">
+                            <i class="fas fa-palette"></i>
+                        </label>
+                        <input type="color" id="custom-aura-color" value="#10b981">
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <button class="icon-btn export-btn tooltip-target" data-tooltip="Exportar Chat">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div id="workspace-core" class="workspace-core view-centered">
+                
+                <div id="welcome-hero" class="welcome-hero">
+                    <div class="hero-logo-container">
+                        <div class="animated-ai-waves giant">
+                            <span class="w1"></span><span class="w2"></span><span class="w3"></span><span class="w4"></span><span class="w5"></span>
+                        </div>
+                    </div>
+                    <h1 class="hero-title">Hola, soy <span class="gradient-text">MyAI</span></h1>
+                    <p class="hero-subtitle">Tu asistente avanzado. ¿En qué puedo ayudarte a crear o resolver hoy?</p>
+                    
+                    <div class="suggested-prompts">
+                        <button class="prompt-card">
+                            <i class="fas fa-code"></i>
+                            <div class="card-text">
+                                <h4>Generar Código</h4>
+                                <p>Crea un script para conectar una base de datos SQLite.</p>
+                            </div>
+                        </button>
+                        <button class="prompt-card">
+                            <i class="fas fa-chart-network"></i>
+                            <div class="card-text">
+                                <h4>Analizar Datos</h4>
+                                <p>Extrae métricas clave del documento adjunto.</p>
+                            </div>
+                        </button>
+                        <button class="prompt-card">
+                            <i class="fas fa-file-alt"></i>
+                            <div class="card-text">
+                                <h4>Resumir PDF</h4>
+                                <p>Sube un archivo y extraeré los puntos principales.</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="chat-messages-scroll" class="chat-messages-scroll custom-scrollbar hidden">
+                    <div id="chat-messages-container" class="messages-container">
+                        </div>
+                </div>
+
+                <div id="input-zone" class="input-zone">
+                    
+                    <div id="file-staging-area" class="file-staging-area hidden">
+                        <div class="staging-header">
+                            <span>Archivos adjuntos listos para análisis (Conversión a bytes)</span>
+                            <button id="clear-all-files" class="text-btn">Quitar todos</button>
+                        </div>
+                        <div id="staged-files-list" class="staged-files-list custom-scrollbar"></div>
+                    </div>
+
+                    <div class="input-box-wrapper modern-glass">
+                        
+                        <div class="input-action-group left">
+                            <input type="file" id="file-upload-input" multiple accept=".txt,.pdf,.doc,.docx,.xls,.xlsx,.csv" hidden>
+                            <button id="btn-attach" class="input-action-btn tooltip-target" data-tooltip="Adjuntar archivos (Word, Excel, PDF, TXT)">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                        </div>
+
+                        <div class="textarea-container">
+                            <textarea id="main-chat-input" rows="1" placeholder="Escribe tu mensaje a MyAI o arrastra archivos aquí..." aria-label="Mensaje"></textarea>
+                        </div>
+
+                        <div class="input-action-group right">
+                            <div class="token-counter" id="token-counter" title="Estimación de longitud">0 / 8000</div>
+                            <button id="btn-dictation" class="input-action-btn tooltip-target" data-tooltip="Dictado por voz">
+                                <i class="fas fa-microphone-alt"></i>
+                            </button>
+                            <button id="btn-send-message" class="send-submit-btn disabled">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="disclaimer-text">
+                        <i class="fas fa-shield-alt"></i> MyAI procesa la información en tiempo real. Los archivos se analizan y convierten a texto para el modelo.
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <template id="tpl-user-message">
+        <div class="message-row user-row">
+            <div class="message-bubble user-bubble modern-glass">
+                <div class="message-content"></div>
+                <div class="message-meta">
+                    <span class="msg-time"></span>
+                    <i class="fas fa-check-double msg-status"></i>
+                </div>
+            </div>
+            <div class="avatar user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-ai-message">
+        <div class="message-row ai-row">
+            <div class="avatar ai-avatar">
+                <div class="animated-ai-waves small">
+                    <span class="w1"></span><span class="w2"></span><span class="w3"></span><span class="w4"></span>
+                </div>
+            </div>
+            <div class="message-bubble ai-bubble modern-glass">
+                <div class="message-header">
+                    <span class="ai-name">MyAI</span>
+                    <div class="ai-tools">
+                        <button class="tool-btn btn-copy-msg" title="Copiar texto"><i class="far fa-copy"></i></button>
+                        <button class="tool-btn btn-regenerate" title="Regenerar respuesta"><i class="fas fa-sync-alt"></i></button>
+                        <button class="tool-btn btn-read-aloud" title="Leer en voz alta"><i class="fas fa-volume-up"></i></button>
+                    </div>
+                </div>
+                <div class="message-content markdown-body"></div>
+                <div class="message-meta">
+                    <span class="msg-time"></span>
+                    <span class="msg-level-tag"></span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-staged-file">
+        <div class="staged-file-card">
+            <div class="file-icon-type">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <div class="file-details">
+                <span class="file-name">documento.pdf</span>
+                <span class="file-size">2.4 MB</span>
+            </div>
+            <div class="file-processing-status">
+                <div class="spinner-mini"></div>
+                <span>Convirtiendo a bytes...</span>
+            </div>
+            <button class="remove-file-btn"><i class="fas fa-times"></i></button>
+        </div>
+    </template>
+
+    <template id="tpl-chat-file-attachment">
+        <div class="chat-attachment-box">
+            <div class="attachment-icon"><i class="fas fa-file-code"></i></div>
+            <div class="attachment-info">
+                <div class="att-name"></div>
+                <div class="att-meta">Archivo extraído y procesado para análisis</div>
+            </div>
+            <button class="download-att-btn" title="Descargar"><i class="fas fa-download"></i></button>
+        </div>
+    </template>
+
+    <template id="tpl-code-block">
+        <div class="enhanced-code-block">
+            <div class="code-top-bar">
+                <div class="window-controls">
+                    <span></span><span></span><span></span>
+                </div>
+                <span class="code-lang-label">javascript</span>
+                <button class="code-copy-btn">
+                    <i class="far fa-copy"></i> Copiar Código
+                </button>
+            </div>
+            <div class="code-scroll-area custom-scrollbar">
+                <pre><code class="code-content"></code></pre>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-typing-indicator">
+        <div class="message-row ai-row typing-row" id="global-typing-indicator">
+            <div class="avatar ai-avatar">
+                <div class="animated-ai-waves small active">
+                    <span class="w1"></span><span class="w2"></span><span class="w3"></span><span class="w4"></span>
+                </div>
+            </div>
+            <div class="message-bubble ai-bubble typing-bubble modern-glass">
+                <div class="status-text">Generando respuesta nivel <span class="current-level-display"></span>...</div>
+                <div class="typing-dots">
+                    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div id="global-tooltip" class="custom-tooltip hidden"></div>
+    <script src="script.js"></script>
+
+
+</body>
+</html>

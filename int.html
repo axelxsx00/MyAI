@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyAI</title>
+
+<style>
+body{
+    margin:0;
+    background:#050505;
+    overflow:hidden;
+}
+
+/* ===== LOGO ===== */
+svg{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    width:900px;
+    max-width:90%;
+    pointer-events:none;
+}
+
+.line{
+    fill:none;
+    stroke:#00E5FF;
+    stroke-width:8;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    filter:
+        drop-shadow(0 0 5px #00E5FF)
+        drop-shadow(0 0 15px #00E5FF)
+        drop-shadow(0 0 30px #00E5FF);
+}
+
+/* ===== PARTICULAS ===== */
+.circle{
+    position:absolute;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#00E5FF;
+    box-shadow:0 0 10px #00E5FF;
+    pointer-events:none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== LOGO (SIN CAMBIOS) ===== -->
+<svg viewBox="0 0 900 250">
+    <path class="line" d="M80 190 L80 60 L145 125 L210 60 L210 190" />
+    <path class="line" d="M280 60 L340 120 L400 60 M340 120 L340 190" />
+    <path class="line" d="M520 190 L600 60 L680 190 M550 130 L650 130" />
+    <path class="line" d="M820 60 L820 190" />
+</svg>
+
+<!-- ===== PARTICULAS ===== -->
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+
+<script type="module">
+import { animate, svg, stagger } from 'https://esm.sh/animejs';
+
+/* =========================
+   REDIRECCIÓN AUTOMÁTICA (3 SEGUNDOS)
+========================= */
+setTimeout(() => {
+    window.location.href = 'MyAI.html';
+}, 3000);
+
+/* =========================
+   LOGO ANIMADO (INTACTO)
+========================= */
+
+animate(svg.createDrawable('.line'), {
+    draw: ['0 0', '0 1', '1 1'],
+    duration: 3500,
+    delay: stagger(150),
+    ease: 'inOutQuart',
+    loop: true,
+    loopDelay: 500
+});
+
+animate('.line', {
+    strokeWidth: [6, 10, 6],
+    duration: 1200,
+    ease: 'inOutSine',
+    loop: true
+});
+
+/* =========================
+   PARTICULAS SUAVES
+========================= */
+
+const circles = [...document.querySelectorAll('.circle')];
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+window.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+/* posición inicial */
+circles.forEach((c, i) => {
+    c.style.left = (mouseX + i * 14) + 'px';
+    c.style.top  = (mouseY + i * 14) + 'px';
+});
+
+/* seguimiento lento tipo gel */
+function animateParticles() {
+
+    circles.forEach((c, i) => {
+
+        const x = parseFloat(c.style.left);
+        const y = parseFloat(c.style.top);
+
+        const dx = mouseX - x;
+        const dy = mouseY - y;
+
+        /* 🔥 MÁS LENTO (como pediste) */
+        const speed = 0.08 - i * 0.008;
+
+        c.style.left = (x + dx * speed) + 'px';
+        c.style.top  = (y + dy * speed) + 'px';
+    });
+
+    requestAnimationFrame(animateParticles);
+}
+
+animateParticles();
+
+</script>
+
+</body>
+</html>
